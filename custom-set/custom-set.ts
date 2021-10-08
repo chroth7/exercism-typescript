@@ -1,41 +1,55 @@
 export class CustomSet {
-  constructor(initial?: unknown) {
-    throw new Error('Remove this statement and implement this function')
+  public data: number[] = [];
+
+  constructor(initial?: number[]) {
+    this.data = initial ? initial : [];
+    this.dedupe();
   }
 
-  empty(): unknown {
-    throw new Error('Remove this statement and implement this function')
+  private dedupe(): void {
+    // I am using `Set` here just to dedupe quickly, not as a data structure
+    this.data = [...new Set(this.data)];
   }
 
-  contains(element: unknown): unknown {
-    throw new Error('Remove this statement and implement this function')
+  empty(): boolean {
+    return this.data.length === 0;
   }
 
-  add(element: unknown): CustomSet {
-    throw new Error('Remove this statement and implement this function')
+  contains(element: number): boolean {
+    return this.data.includes(element);
   }
 
-  subset(other: unknown): CustomSet {
-    throw new Error('Remove this statement and implement this function')
+  add(element: number): CustomSet {
+    this.data = [...this.data, element];
+    this.dedupe();
+    return this;
   }
 
-  disjoint(other: unknown): CustomSet {
-    throw new Error('Remove this statement and implement this function')
+  subset(other: CustomSet): boolean {
+    return this.data.every((d) => other.contains(d));
   }
 
-  eql(other: unknown): unknown {
-    throw new Error('Remove this statement and implement this function')
+  disjoint(other: CustomSet): boolean {
+    return !this.data.some((d) => other.contains(d));
   }
 
-  union(other: unknown): CustomSet {
-    throw new Error('Remove this statement and implement this function')
+  eql(other: CustomSet): boolean {
+    return this.data.length === other.data.length && this.subset(other);
   }
 
-  intersection(other: unknown): CustomSet {
-    throw new Error('Remove this statement and implement this function')
+  union(other: CustomSet): CustomSet {
+    this.data = [...this.data, ...other.data];
+    this.dedupe();
+    return this;
   }
 
-  difference(other: unknown): CustomSet {
-    throw new Error('Remove this statement and implement this function')
+  intersection(other: CustomSet): CustomSet {
+    const intersection = this.data.filter((d) => other.data.includes(d));
+    return new CustomSet(intersection);
+  }
+
+  difference(other: CustomSet): CustomSet {
+    const difference = this.data.filter((d) => !other.data.includes(d));
+    return new CustomSet(difference);
   }
 }
